@@ -1,5 +1,8 @@
 import React from "react"
 import styles from "./index.module.scss"
+import {Bar} from "./bar"
+import YAxisLabels from "./yAxisLabels"
+import {XAxisLabels} from "./xAxisLabels"
 
 export interface BarGraphProps {
     data: number[]
@@ -34,86 +37,59 @@ export const BarGraph: React.FC<BarGraphProps> = ({data, labels: xLabels}) => {
     })()
     const barWidth = (width - xAxisPadding - barSpacing) / data.length - barSpacing
     const yLabelCount = 10
-
-    // TODO: make labels nice whole numbers
     const yLabels = Array(yLabelCount)
         .fill(undefined)
         .map((_, index) => (graphMax / 10) * (index + 1))
-
     const yLabelSpacing = (height - yAxisPadding - topPadding) / yLabelCount
 
     return (
         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-            {yLabels.map((label, index) => {
-                const labelY = height - yAxisPadding - yLabelSpacing * (1 + index)
-
-                return (
-                    <React.Fragment key={`yLabel-${label}`}>
-                        <text
-                            className={styles.axisLabel}
-                            textAnchor="end"
-                            dominantBaseline="middle"
-                            x={xAxisPadding - labelAxisPadding}
-                            y={labelY}
-                        >
-                            {label}
-                        </text>
-                        <line
-                            x1={xAxisPadding}
-                            y1={labelY}
-                            x2={width}
-                            y2={labelY}
-                            className={styles.gridLine}
-                        ></line>
-                        <line
-                            x1={xAxisPadding}
-                            y1={labelY + yLabelSpacing / 2}
-                            x2={width}
-                            y2={labelY + yLabelSpacing / 2}
-                            className={styles.gridLineMinor}
-                        ></line>
-                    </React.Fragment>
-                )
-            })}
-            {data.map((value, index) => {
-                const barHeight = (height - yAxisPadding - topPadding) * (value / graphMax)
-                const barX =
-                    xAxisPadding +
-                    barSpacing +
-                    ((width - xAxisPadding - barSpacing) / data.length) * index
-
-                return (
-                    <rect
-                        key={`bar-${value}-${index}`}
-                        x={barX}
-                        y={height - barHeight - yAxisPadding}
-                        width={barWidth}
-                        height={barHeight}
-                        className={styles.bar}
-                    ></rect>
-                )
-            })}
+            {yLabels.map((label, index) => (
+                <YAxisLabels
+                    canvasHeight={height}
+                    canvasWidth={width}
+                    key={`yLabel-${label}`}
+                    {...{
+                        xAxisPadding,
+                        yAxisPadding,
+                        yLabelSpacing,
+                        label,
+                        index,
+                        labelAxisPadding,
+                    }}
+                />
+            ))}
+            {data.map((value, index) => (
+                <Bar
+                    canvasHeight={height}
+                    canvasWidth={width}
+                    key={`bar-${value}-${index}`}
+                    barTopPadding={topPadding}
+                    barValue={value}
+                    maxValue={graphMax}
+                    dataLength={data.length}
+                    {...{yAxisPadding, xAxisPadding, barSpacing, barWidth, index}}
+                />
+            ))}
             {/* Will always display labels if they are specified, no matter the number of bars. Assumes that the number of labels = length of data. */}
-            {xLabels?.map((label, index) => {
-                const labelX =
-                    xAxisPadding +
-                    barSpacing +
-                    barWidth / 2 +
-                    ((width - xAxisPadding - barSpacing) / data.length) * index
-                const labelY = height - yAxisPadding + labelAxisPadding
-
-                return (
-                    <text
-                        className={styles.axisLabel}
-                        textAnchor="end"
-                        x={labelX}
-                        y={labelY}
-                        transform={`rotate(270, ${labelX}, ${labelY})`}
-                    >
-                        {label}
-                    </text>
-                )
-            }) ?? []}
+            {xLabels?.map((label, index) => (
+                <XAxisLabels
+                    key={`xLabel-${label}-${index}`}
+                    canvasHeight={height}
+                    canvasWidth={width}
+                    dataLength={data.length}
+                    {...{
+                        barSpacing,
+                        barWidth,
+                        yAxisPadding,
+                        xAxisPadding,
+                        yLabelSpacing,
+                        index,
+                        labelAxisPadding,
+                        label,
+                    }}
+                />
+            ))}
             <line
                 x1={xAxisPadding}
                 y1={0}
