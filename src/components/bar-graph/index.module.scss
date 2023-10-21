@@ -4,6 +4,18 @@
   stroke: variables.$foreground-color;
 }
 
+.gridLine {
+  stroke: rgba(variables.$foreground-color, 0.5);
+}
+
+.gridLineMinor {
+  stroke: rgba(variables.$foreground-color, 0.25);
+}
+
 .bar {
   fill: variables.$primary-color;
+}
+
+.axisLabel {
+  fill: variables.$foreground-color;
 }
