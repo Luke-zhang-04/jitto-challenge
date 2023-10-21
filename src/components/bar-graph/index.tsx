@@ -1,3 +1,4 @@
+import React from "react"
 import styles from "./index.module.scss"
 
 export interface BarGraphProps {
@@ -13,7 +14,6 @@ const labelAxisPadding = 10
 
 export const BarGraph: React.FC<BarGraphProps> = ({data}) => {
     const max = Math.max(...data)
-    const min = Math.min(...data)
     const barSpacing = (() => {
         const spacing = (width - axisPadding) / (data.length + 1) / data.length
 
@@ -35,7 +35,7 @@ export const BarGraph: React.FC<BarGraphProps> = ({data}) => {
                 const labelY = height - axisPadding - yLabelSpacing * (1 + index)
 
                 return (
-                    <>
+                    <React.Fragment key={`yLabel-${label}`}>
                         <text
                             className={styles.axisLabel}
                             textAnchor="end"
@@ -59,7 +59,7 @@ export const BarGraph: React.FC<BarGraphProps> = ({data}) => {
                             y2={labelY + yLabelSpacing / 2}
                             className={styles.gridLineMinor}
                         ></line>
-                    </>
+                    </React.Fragment>
                 )
             })}
             {data.map((value, index) => {
@@ -71,6 +71,7 @@ export const BarGraph: React.FC<BarGraphProps> = ({data}) => {
 
                 return (
                     <rect
+                        key={`bar-${value}-${index}`}
                         x={barX}
                         y={height - barHeight - axisPadding}
                         width={barWidth}
