@@ -6,6 +6,17 @@ export interface BarGraphProps {
     labels?: string[]
 }
 
+// There are probably better ways to pick a tick range, but for the purposes of this challenge, this will suffice
+const getMaxForYAxis = (num: number): number => {
+    if (num < 5) {
+        return num
+    }
+
+    const rounded = Math.round(num / 10) * 10
+
+    return rounded < num ? rounded + 10 : rounded
+}
+
 const width = 750
 const height = 500
 const xAxisPadding = 50
@@ -14,19 +25,20 @@ const topPadding = 20
 const labelAxisPadding = 10
 
 export const BarGraph: React.FC<BarGraphProps> = ({data, labels: xLabels}) => {
-    const max = Math.max(...data)
+    const dataMax = Math.max(...data)
+    const graphMax = getMaxForYAxis(dataMax)
     const barSpacing = (() => {
         const spacing = (width - xAxisPadding) / (data.length + 1) / data.length
 
         return spacing < 5 ? 0 : spacing
     })()
     const barWidth = (width - xAxisPadding - barSpacing) / data.length - barSpacing
-    const yLabelCount = Math.min(Math.max(5, max / 10), 10)
+    const yLabelCount = 10
 
     // TODO: make labels nice whole numbers
     const yLabels = Array(yLabelCount)
         .fill(undefined)
-        .map((_, index) => (max / 10) * (index + 1))
+        .map((_, index) => (graphMax / 10) * (index + 1))
 
     const yLabelSpacing = (height - yAxisPadding - topPadding) / yLabelCount
 
@@ -64,7 +76,7 @@ export const BarGraph: React.FC<BarGraphProps> = ({data, labels: xLabels}) => {
                 )
             })}
             {data.map((value, index) => {
-                const barHeight = (height - yAxisPadding - topPadding) * (value / max)
+                const barHeight = (height - yAxisPadding - topPadding) * (value / graphMax)
                 const barX =
                     xAxisPadding +
                     barSpacing +
