@@ -1,0 +1,10 @@
+@use "../../variables.scss";
+
+.axis {
+  stroke: variables.$foreground-color;
+}
+
+.bar {
+  fill: blue;
+  stroke: white;
+}
