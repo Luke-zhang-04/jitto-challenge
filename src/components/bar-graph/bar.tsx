@@ -12,7 +12,6 @@ export interface BarProps {
     barWidth: number
     dataLength: number
     index: number
-    key: string
 }
 
 export const Bar: React.FC<BarProps> = ({
@@ -27,7 +26,6 @@ export const Bar: React.FC<BarProps> = ({
     barWidth,
     dataLength,
     index,
-    key,
 }) => {
     const barHeight = (height - yAxisPadding - topPadding) * (value / max)
     const barX =
@@ -35,7 +33,6 @@ export const Bar: React.FC<BarProps> = ({
 
     return (
         <rect
-            key={key}
             x={barX}
             y={height - barHeight - yAxisPadding}
             width={barWidth}

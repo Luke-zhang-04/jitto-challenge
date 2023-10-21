@@ -9,7 +9,6 @@ export interface XAxisLabelsProps {
     canvasHeight: number
     dataLength: number
     index: number
-    key: string
     label: string
     labelAxisPadding: number
 }
@@ -23,25 +22,24 @@ export const XAxisLabels: React.FC<XAxisLabelsProps> = ({
     barWidth,
     index,
     dataLength,
-    key,
     label,
     labelAxisPadding,
 }) => {
+    const shouldRotate = width / dataLength < label.length * 12
+    const labelY = height - yAxisPadding + labelAxisPadding + (shouldRotate ? 0 : labelAxisPadding)
     const labelX =
         xAxisPadding +
         barSpacing +
-        barWidth / 2 +
+        (shouldRotate ? barWidth / 2 : 0) +
         ((width - xAxisPadding - barSpacing) / dataLength) * index
-    const labelY = height - yAxisPadding + labelAxisPadding
 
     return (
         <text
-            key={key}
             className={styles.axisLabel}
-            textAnchor="end"
+            textAnchor={shouldRotate ? "end" : "start"}
             x={labelX}
             y={labelY}
-            transform={`rotate(270, ${labelX}, ${labelY})`}
+            transform={shouldRotate ? `rotate(270, ${labelX}, ${labelY})` : undefined}
         >
             {label}
         </text>

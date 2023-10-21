@@ -10,7 +10,6 @@ export interface YAxisLabelsProps {
     index: number
     label: number
     labelAxisPadding: number
-    key: string
 }
 
 export const YAxisLabels: React.FC<YAxisLabelsProps> = ({
@@ -22,12 +21,11 @@ export const YAxisLabels: React.FC<YAxisLabelsProps> = ({
     index,
     labelAxisPadding,
     label,
-    key,
 }) => {
     const labelY = height - yAxisPadding - yLabelSpacing * (1 + index)
 
     return (
-        <React.Fragment key={key}>
+        <React.Fragment>
             <text
                 className={styles.axisLabel}
                 textAnchor="end"

@@ -7,6 +7,7 @@ import {XAxisLabels} from "./xAxisLabels"
 export interface BarGraphProps {
     data: number[]
     labels?: string[]
+    title?: string
 }
 
 // There are probably better ways to pick a tick range, but for the purposes of this challenge, this will suffice
@@ -27,13 +28,13 @@ const yAxisPadding = 100
 const topPadding = 20
 const labelAxisPadding = 10
 
-export const BarGraph: React.FC<BarGraphProps> = ({data, labels: xLabels}) => {
+export const BarGraph: React.FC<BarGraphProps> = ({data, labels: xLabels, title}) => {
     const dataMax = Math.max(...data)
     const graphMax = getMaxForYAxis(dataMax)
     const barSpacing = (() => {
         const spacing = (width - xAxisPadding) / (data.length + 1) / data.length
 
-        return spacing < 5 ? 0 : spacing
+        return spacing < 1 ? 0 : spacing
     })()
     const barWidth = (width - xAxisPadding - barSpacing) / data.length - barSpacing
     const yLabelCount = 10
@@ -104,6 +105,17 @@ export const BarGraph: React.FC<BarGraphProps> = ({data, labels: xLabels}) => {
                 y2={height - yAxisPadding}
                 className={styles.axis}
             ></line>
+            {title ? (
+                <text
+                    x={xAxisPadding + (width - xAxisPadding) / 2}
+                    y={0}
+                    className={styles.title}
+                    textAnchor="middle"
+                    dominantBaseline="hanging"
+                >
+                    {title}
+                </text>
+            ) : null}
         </svg>
     )
 }
