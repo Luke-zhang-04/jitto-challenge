@@ -6,7 +6,7 @@ import {XAxisLabels} from "./xAxisLabels"
 
 export interface BarGraphProps {
     data: number[]
-    labels?: string[]
+    labels?: (string | undefined)[]
     title?: string
 }
 
@@ -73,24 +73,26 @@ export const BarGraph: React.FC<BarGraphProps> = ({data, labels: xLabels, title}
                 />
             ))}
             {/* Will always display labels if they are specified, no matter the number of bars. Assumes that the number of labels = length of data. */}
-            {xLabels?.map((label, index) => (
-                <XAxisLabels
-                    key={`xLabel-${label}-${index}`}
-                    canvasHeight={height}
-                    canvasWidth={width}
-                    dataLength={data.length}
-                    {...{
-                        barSpacing,
-                        barWidth,
-                        yAxisPadding,
-                        xAxisPadding,
-                        yLabelSpacing,
-                        index,
-                        labelAxisPadding,
-                        label,
-                    }}
-                />
-            ))}
+            {xLabels?.map((label, index) =>
+                label ? (
+                    <XAxisLabels
+                        key={`xLabel-${label}-${index}`}
+                        canvasHeight={height}
+                        canvasWidth={width}
+                        dataLength={data.length}
+                        {...{
+                            barSpacing,
+                            barWidth,
+                            yAxisPadding,
+                            xAxisPadding,
+                            yLabelSpacing,
+                            index,
+                            labelAxisPadding,
+                            label,
+                        }}
+                    />
+                ) : null,
+            )}
             <line
                 x1={xAxisPadding}
                 y1={0}

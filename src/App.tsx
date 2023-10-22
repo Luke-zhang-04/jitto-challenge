@@ -71,8 +71,23 @@ const presetData: {
             occurences[Math.round(data * ranges)]++
         }
 
+        const mean = rawData.reduce((prev, cur) => prev + cur) / rawData.length
+        const stdDev = Math.sqrt(
+            rawData.map((val) => Math.pow(val - mean, 2)).reduce((prev, cur) => prev + cur) /
+                rawData.length,
+        )
+
+        const labels = Array(ranges).fill(undefined)
+
+        labels[Math.round(mean * ranges)] = "Mean"
+        for (let i = 1; i <= 3; i++) {
+            labels[Math.round((mean + stdDev * i) * ranges)] = `${i}σ`
+            labels[Math.round((mean - stdDev * i) * ranges)] = `-${i}σ`
+        }
+
         return {
             data: occurences,
+            labels,
             title: "Random Normally Distributed Data",
         }
     },
